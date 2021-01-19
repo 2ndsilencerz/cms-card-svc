@@ -2,16 +2,18 @@ package database
 
 import (
 	"fmt"
-	"github.com/2ndSilencerz/cms-card-svc/config"
-	"github.com/2ndSilencerz/cms-card-svc/config/utils"
-	"github.com/cengsin/oracle"
-	"gorm.io/gorm"
 	"log"
+
+	"github.com/2ndSilencerz/cms-card-svc/configs"
+	"github.com/2ndSilencerz/cms-card-svc/configs/utils"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
+// InitDB the mysql
 func InitDB() *gorm.DB {
-	conf := config.GetDatabaseConfig()
-	db, err := gorm.Open(oracle.Open(conf), &gorm.Config{})
+	conf := configs.GetDatabaseConfig()
+	db, err := gorm.Open(mysql.Open(conf), &gorm.Config{})
 	if err != nil {
 		msg := fmt.Sprintf("Error: %v\n", err)
 		utils.LogToFile(msg)
@@ -20,14 +22,14 @@ func InitDB() *gorm.DB {
 	return db
 }
 
+// CloseDB to close connection
 func CloseDB(db *gorm.DB) {
-	oracleDB, err := db.DB()
+	mysqlDB, err := db.DB()
 	if err != nil {
 		utils.LogToFile(fmt.Sprintf("Error: %v", err))
 	}
-	err = oracleDB.Close()
+	err = mysqlDB.Close()
 	if err != nil {
 		utils.LogToFile(fmt.Sprintf("Error: %v", err))
 	}
 }
-

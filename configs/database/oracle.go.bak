@@ -1,0 +1,34 @@
+package database
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/2ndSilencerz/cms-card-svc/configs"
+	"github.com/2ndSilencerz/cms-card-svc/configs/utils"
+	"github.com/cengsin/oracle"
+	"gorm.io/gorm"
+)
+
+func InitDB() *gorm.DB {
+	conf := configs.GetDatabaseConfig()
+	db, err := gorm.Open(oracle.Open(conf), &gorm.Config{})
+	if err != nil {
+		msg := fmt.Sprintf("Error: %v\n", err)
+		utils.LogToFile(msg)
+		log.Panicln(msg)
+	}
+	return db
+}
+
+// CloseDB to close connection
+func CloseDB(db *gorm.DB) {
+	oracleDB, err := db.DB()
+	if err != nil {
+		utils.LogToFile(fmt.Sprintf("Error: %v", err))
+	}
+	err = oracleDB.Close()
+	if err != nil {
+		utils.LogToFile(fmt.Sprintf("Error: %v", err))
+	}
+}

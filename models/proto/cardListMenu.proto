@@ -1,17 +1,22 @@
 syntax = "proto3";
 
-package service;
-option go_package = ".;service";
+// package should be matched to the directory which .pb.go file will be placed
+package pb;
+option go_package = ".;pb";
 
-service cardList {
-    rpc Get(Page) returns (VCard) {}
+service CardList {
+    rpc GetCardList(Page) returns (VCardList) {}
 }
 
 message Page {
-    string type = 1;
-    string value = 2;
+    string filterType = 1;
+    string filterValue = 2;
     string page = 3;
     string limit = 4;
+}
+
+message VCardList {
+    repeated VCard vcard = 1;
 }
 
 message VCard {
@@ -19,7 +24,8 @@ message VCard {
     string cardType = 2;
     string nameOnCard = 3;
     string cifName = 4;
-    string accFlag = 5;
+    string cif = 5;
     string cardBranch = 6;
-    string instantNon = 7;
+    string status = 7;
+    string instantNon = 8;
 }

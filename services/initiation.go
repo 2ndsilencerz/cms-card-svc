@@ -1,7 +1,7 @@
 package services
 
 import (
-	"github.com/2ndSilencerz/cms-card-svc/services/pb"
+	"github.com/2ndSilencerz/cms-card-svc/models/pb"
 	"google.golang.org/grpc"
 )
 
