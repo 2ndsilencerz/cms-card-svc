@@ -1,24 +1,25 @@
-package services
+package main
 
 import (
 	"context"
 	"testing"
 
-	"github.com/2ndSilencerz/cms-card-svc/models/pb"
-	"google.golang.org/grpc"
+	"github.com/2ndsilencerz/cms-card-svc/models/pb"
+	"github.com/2ndsilencerz/cms-card-svc/services"
 )
 
 var ctx context.Context = context.Background()
 
 func TestGetCardList(t *testing.T) {
 
-	conn, err := grpc.Dial(":9991", grpc.WithInsecure())
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	client := pb.NewCardListClient(conn)
-	cardList, err := client.GetCardList(ctx,
+	// conn, err := grpc.Dial(":9991", grpc.WithInsecure())
+	// if err != nil {
+	// 	t.Error(err)
+	// 	return
+	// }
+	// client := pb.NewCardListClient(conn)
+	server := &services.Server{}
+	cardList, err := server.GetCardList(ctx,
 		&pb.Page{
 			FilterType:  "No Kartu",
 			FilterValue: " ",

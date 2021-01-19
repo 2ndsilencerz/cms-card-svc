@@ -9,10 +9,10 @@ import (
 func loadFile() *os.File {
 	file, err := os.OpenFile("logs/log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 	if err != nil {
-		//file, err = os.Create("logs/log")
-		//if err != nil {
-		panic(fmt.Errorf("Error: %v\n", err))
-		//}
+		// file, err = os.Create("./logs/log")
+		// if err != nil {
+		panic(fmt.Errorf("Error: %v", err))
+		// }
 	}
 	return file
 }

@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/2ndSilencerz/cms-card-svc/configs/database"
-	"github.com/2ndSilencerz/cms-card-svc/configs/utils"
-	"github.com/2ndSilencerz/cms-card-svc/models"
-	"github.com/2ndSilencerz/cms-card-svc/models/pb"
+	"github.com/2ndsilencerz/cms-card-svc/configs/database"
+	"github.com/2ndsilencerz/cms-card-svc/configs/utils"
+	"github.com/2ndsilencerz/cms-card-svc/models"
+	"github.com/2ndsilencerz/cms-card-svc/models/pb"
 	"golang.org/x/net/context"
 )
 
 // GetCardList ...
-func (s *server) GetCardList(ctx context.Context, in *pb.Page) (*pb.VCardList, error) {
+func (s *Server) GetCardList(ctx context.Context, in *pb.Page) (*pb.VCardList, error) {
 	utils.LogToFile(fmt.Sprintf("Request: %T", in))
 	db := database.InitDB()
 	defer database.CloseDB(db)
@@ -33,7 +33,7 @@ func (s *server) GetCardList(ctx context.Context, in *pb.Page) (*pb.VCardList, e
 	}
 	filterType := in.FilterType
 	filterValue := in.FilterValue
-	if filterType == `No Kartu` && filterValue != " " {
+	if filterType == "No Kartu" && filterValue != " " {
 		err = db.WithContext(ctx).Where("CRDNO = ?", filterValue).Limit(limit).Offset(offsets).Find(&vcardList).Error
 	} else if filterType == "No Rekening" && filterValue != " " {
 		err = db.WithContext(ctx).Where("CRACIF = ?", filterValue).Limit(limit).Offset(offsets).Find(&vcardList).Error
@@ -45,7 +45,6 @@ func (s *server) GetCardList(ctx context.Context, in *pb.Page) (*pb.VCardList, e
 	}
 
 	result := new(pb.VCardList)
-	var index int64 = 0
 	for _, v := range vcardList {
 		card := pb.VCard{
 			CardNo:     v.CardNo,
@@ -58,7 +57,6 @@ func (s *server) GetCardList(ctx context.Context, in *pb.Page) (*pb.VCardList, e
 			InstantNon: v.InstantNon,
 		}
 		result.Vcard = append(result.Vcard, &card)
-		index++
 	}
 
 	utils.LogToFile(fmt.Sprintf("Response: %T", result))

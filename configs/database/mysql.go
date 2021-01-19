@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/2ndSilencerz/cms-card-svc/configs"
-	"github.com/2ndSilencerz/cms-card-svc/configs/utils"
+	"github.com/2ndsilencerz/cms-card-svc/configs"
+	"github.com/2ndsilencerz/cms-card-svc/configs/utils"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

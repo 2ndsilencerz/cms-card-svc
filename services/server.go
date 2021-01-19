@@ -1,4 +1,4 @@
 package services
 
-// server ...
-type server struct{}
+// Server ...
+type Server struct{}
