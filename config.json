@@ -1,0 +1,7 @@
+{
+  "postgres" : "host=master1.mlptgate.com user=nobu password=postgres12345678 database=test_taufik port=5432 TimeZone=Asia/Jakarta",
+  "cronInterval" : 5,
+  "redisHost" : "master1.mlptgate.com:6379",
+  "redisPass" : "",
+  "redisDB" : 0
+}
