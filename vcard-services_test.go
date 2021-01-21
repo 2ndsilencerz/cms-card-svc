@@ -21,12 +21,15 @@ func TestGetCardList(t *testing.T) {
 	// }
 	// client := pb.NewCardListClient(conn)
 	server := &services.Server{}
+
 	page := &pb.Page{
 		FilterType:  "cardNo",
 		FilterValue: "6274860010001736",
 		Page:        "1",
 		Limit:       "10",
 	}
+
+	// cardList, err := client.GetCardList(ctx, page)
 	cardList, err := server.GetCardList(ctx, page)
 	if err != nil {
 		t.Error(err)
@@ -46,7 +49,15 @@ func TestGetCardList(t *testing.T) {
 }
 
 func TestGetBlockedCard(t *testing.T) {
+
+	// conn, err := grpc.Dial(":9991", grpc.WithInsecure())
+	// if err != nil {
+	// 	t.Error(err)
+	// 	return
+	// }
+	// client := pb.NewCardListClient(conn)
 	server := &services.Server{}
+
 	page := &pb.Page{
 		FilterType:  "accFlag",
 		FilterValue: "61003010013579",
@@ -58,7 +69,10 @@ func TestGetBlockedCard(t *testing.T) {
 		Branch:   "001",
 		OcBranch: "",
 	}
+
+	// cardList, err := client.GetCardBlockedList(ctx, blockPage)
 	cardList, err := server.GetCardBlockedList(ctx, blockPage)
+
 	if err != nil {
 		t.Error(err)
 		return
