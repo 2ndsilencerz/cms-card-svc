@@ -108,6 +108,8 @@ func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) er
 		condition += " AND CRDNO = '" + p.FilterValue + "'"
 	} else if p.FilterType == filterTypeAccFlag {
 		condition += " AND ACCFLAG = '" + p.FilterValue + "'"
+	} else {
+		return utils.NewError("parameter cannot be parsed or isn't defined")
 	}
 
 	// set if

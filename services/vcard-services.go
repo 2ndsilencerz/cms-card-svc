@@ -16,7 +16,7 @@ func setOffset(limitStr, pageStr string) (int, error) {
 	limit := utils.StrToInt(limitStr)
 	page := utils.StrToInt(pageStr)
 	if limit == 0 && page == 0 {
-		return 0, utils.New("Failed to parse limit and page number")
+		return 0, utils.NewError("Failed to parse limit and page number")
 	}
 	offsets := (page-1)*limit - 1
 	if offsets == -1 {
