@@ -9,7 +9,7 @@ If somehow the command above still not work, try to install the package by execu
     go install github.com/golang/protobuf/protoc-gen-go
 
 After that, include the binary path to the environment path (if the generated binary is protoc-gen-go, 
-we can rename this file to proto for simpler name)
+we can rename this file to protoc for simpler name)
 
 To generate go file from this proto execute command like this
 

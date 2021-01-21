@@ -10,4 +10,5 @@ type VCard struct {
 	CardBranch string `gorm:"column:CRBRCR"`
 	Status     string `gorm:"column:CRSTS"`
 	InstantNon string `gorm:"column:CRJNSC"`
+	AccFlag    string `gorm:"column:ACCFLAG"`
 }

@@ -6,6 +6,9 @@ import (
 	"os"
 )
 
+// please mind that to use this function, we need the folder called "logs" in project directory
+// or else everytime we use this, the program will get panic and close
+
 func loadFile() *os.File {
 	file, err := os.OpenFile("logs/log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 	if err != nil {

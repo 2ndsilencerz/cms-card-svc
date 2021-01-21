@@ -6,8 +6,10 @@ option go_package = ".;pb";
 
 service CardList {
     rpc GetCardList(Page) returns (VCardList) {}
+    rpc GetCardBlockedList(BlockPage) returns (VCardList) {}
 }
 
+// Request
 message Page {
     string filterType = 1;
     string filterValue = 2;
@@ -15,6 +17,13 @@ message Page {
     string limit = 4;
 }
 
+message BlockPage {
+    Page page = 1;
+    string branch = 2;
+    string ocBranch = 3;
+}
+
+// Response
 message VCardList {
     repeated VCard vcard = 1;
 }
