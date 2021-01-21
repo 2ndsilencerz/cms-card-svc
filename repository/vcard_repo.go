@@ -68,11 +68,14 @@ func (p *VCardRepository) GetCardList() error {
 	defer database.CloseDB(db)
 	var err error
 
+	res := utils.StrToInt(p.FilterValue)
 	db = db.WithContext(p.Ctx).Limit(p.Limit).Offset(p.Offsets)
-	if p.FilterType == filterTypeCardNo && p.FilterValue != " " {
+	if p.FilterType == filterTypeCardNo && res != 0 {
 		db = db.Where("CRDNO = ?", p.FilterValue)
-	} else if p.FilterType == filterTypeAccFlag && p.FilterValue != " " {
+	} else if p.FilterType == filterTypeAccFlag && res != 0 {
 		db = db.Where("CRACIF = ?", p.FilterValue)
+	} else {
+		return utils.NewError("parameter cannot be parsed or isn't defined")
 	}
 	err = db.Find(&p.VcardList).Error
 
@@ -106,7 +109,7 @@ func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) er
 	// set filter cardNo or accFlag
 	if p.FilterType == filterTypeCardNo && res != 0 {
 		condition += " AND CRDNO = '" + p.FilterValue + "'"
-	} else if p.FilterType == filterTypeAccFlag {
+	} else if p.FilterType == filterTypeAccFlag && res != 0 {
 		condition += " AND ACCFLAG = '" + p.FilterValue + "'"
 	} else {
 		return utils.NewError("parameter cannot be parsed or isn't defined")

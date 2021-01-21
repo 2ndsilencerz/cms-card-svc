@@ -8,6 +8,7 @@ import (
 	"github.com/2ndsilencerz/cms-card-svc/configs/utils"
 	"github.com/2ndsilencerz/cms-card-svc/models/pb"
 	"github.com/2ndsilencerz/cms-card-svc/services"
+	"google.golang.org/grpc"
 )
 
 var ctx context.Context = context.Background()
@@ -87,5 +88,33 @@ func TestGetBlockedCard(t *testing.T) {
 	utils.LogToFile(fmt.Sprintf("TestGetBlockedCard result : %v", res))
 	if res.CardNo == "" {
 		t.Error("result not match with test")
+	}
+}
+
+func TestSQLInject(t *testing.T) {
+
+	conn, err := grpc.Dial(":9991", grpc.WithInsecure())
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	client := pb.NewCardListClient(conn)
+	// server := &services.Server{}
+
+	page := &pb.Page{
+		FilterType:  "accFlag",
+		FilterValue: "0 AND 1=1 || delete * from this;",
+		Page:        "1",
+		Limit:       "10",
+	}
+
+	_, err = client.GetCardList(ctx, page)
+	// _, err := server.GetCardList(ctx, page)
+	if err != nil {
+		if err.Error() == "parameter cannot be parsed or isn't defined" {
+			return
+		}
+	} else {
+		t.Error("this test has failed")
 	}
 }
