@@ -102,8 +102,9 @@ func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) er
 		condition = "CRSTS = '" + utils.IntToStr(cardStatusClose) + "'"
 	}
 
+	res := utils.StrToInt(p.FilterValue)
 	// set filter cardNo or accFlag
-	if p.FilterType == filterTypeCardNo {
+	if p.FilterType == filterTypeCardNo && res != 0 {
 		condition += " AND CRDNO = '" + p.FilterValue + "'"
 	} else if p.FilterType == filterTypeAccFlag {
 		condition += " AND ACCFLAG = '" + p.FilterValue + "'"
