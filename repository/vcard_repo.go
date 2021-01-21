@@ -36,14 +36,11 @@ type constCardFlag struct {
 }
 
 func (c *constCardFlag) set(action string) {
-	if action == CardActionActivate {
+	switch action {
+	case CardActionActivate, CardActionBlock, CardActionChange:
 		c.flag = cardFlagAll
-	} else if action == CardActionBlock {
-		c.flag = cardFlagAll
-	} else if action == CardActionClose {
+	case CardActionClose:
 		c.flag = cardFlagBranch
-	} else if action == CardActionChange {
-		c.flag = cardFlagAll
 	}
 	c.action = action
 }
