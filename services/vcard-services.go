@@ -5,7 +5,6 @@ import (
 
 	"github.com/2ndsilencerz/cms-card-svc/repository"
 
-	"github.com/2ndsilencerz/cms-card-svc/configs/database"
 	"github.com/2ndsilencerz/cms-card-svc/configs/utils"
 	"github.com/2ndsilencerz/cms-card-svc/models"
 	"github.com/2ndsilencerz/cms-card-svc/models/pb"
@@ -77,8 +76,6 @@ func (s *Server) GetCardList(ctx context.Context, in *pb.Page) (*pb.VCardList, e
 // GetCardBlockedList used in /card/list/block (Menu Daftar Kartu -> Blokir Kartu)
 func (s *Server) GetCardBlockedList(ctx context.Context, in *pb.BlockPage) (*pb.VCardList, error) {
 	utils.LogToFile(fmt.Sprintf("Request: %T", in))
-	db := database.InitDB()
-	defer database.CloseDB(db)
 
 	limit := utils.StrToInt(in.Page.Limit)
 	offsets, err := setOffset(in.Page.Limit, in.Page.Page)
