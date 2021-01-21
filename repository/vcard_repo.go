@@ -69,9 +69,9 @@ func (p *VCardRepository) GetCardList() error {
 	var err error
 
 	db = db.WithContext(p.Ctx).Limit(p.Limit).Offset(p.Offsets)
-	if p.FilterType == "No Kartu" && p.FilterValue != " " {
+	if p.FilterType == filterTypeCardNo && p.FilterValue != " " {
 		db = db.Where("CRDNO = ?", p.FilterValue)
-	} else if p.FilterType == "No Rekening" && p.FilterValue != " " {
+	} else if p.FilterType == filterTypeAccFlag && p.FilterValue != " " {
 		db = db.Where("CRACIF = ?", p.FilterValue)
 	}
 	err = db.Find(&p.VcardList).Error

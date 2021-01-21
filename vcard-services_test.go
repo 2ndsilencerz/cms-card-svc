@@ -22,7 +22,7 @@ func TestGetCardList(t *testing.T) {
 	// client := pb.NewCardListClient(conn)
 	server := &services.Server{}
 	page := &pb.Page{
-		FilterType:  "No Kartu",
+		FilterType:  "cardNo",
 		FilterValue: "6274860010001736",
 		Page:        "1",
 		Limit:       "10",
@@ -48,7 +48,7 @@ func TestGetCardList(t *testing.T) {
 func TestGetBlockedCard(t *testing.T) {
 	server := &services.Server{}
 	page := &pb.Page{
-		FilterType:  "No Rekening",
+		FilterType:  "accFlag",
 		FilterValue: "61003010013579",
 		Page:        "1",
 		Limit:       "10",
