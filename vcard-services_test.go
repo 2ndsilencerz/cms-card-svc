@@ -7,6 +7,7 @@ import (
 
 	"github.com/2ndsilencerz/cms-card-svc/configs/utils"
 	"github.com/2ndsilencerz/cms-card-svc/models/pb"
+	"github.com/2ndsilencerz/cms-card-svc/repository"
 	"github.com/2ndsilencerz/cms-card-svc/services"
 	"google.golang.org/grpc"
 )
@@ -111,7 +112,7 @@ func TestSQLInject(t *testing.T) {
 	_, err = client.GetCardList(ctx, page)
 	// _, err := server.GetCardList(ctx, page)
 	if err != nil {
-		if err.Error() == "parameter cannot be parsed or isn't defined" {
+		if err.Error() == repository.CardNoFailedToParseMessage {
 			return
 		}
 	} else {
