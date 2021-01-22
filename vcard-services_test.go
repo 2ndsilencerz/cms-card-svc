@@ -37,7 +37,7 @@ func TestGetCardList(t *testing.T) {
 		return
 	}
 
-	if len(cardList.GetVcard()) < 0 {
+	if len(cardList.GetVcard()) <= 0 {
 		t.Error("no data found")
 		return
 	}
@@ -79,7 +79,7 @@ func TestGetBlockedCard(t *testing.T) {
 		return
 	}
 
-	if len(cardList.GetVcard()) < 0 {
+	if len(cardList.GetVcard()) <= 0 {
 		t.Error("no data found")
 		return
 	}
@@ -117,4 +117,41 @@ func TestSQLInject(t *testing.T) {
 	} else {
 		t.Error("this test has failed")
 	}
+}
+
+func TestGetCardDetails(t *testing.T) {
+
+	// conn, err := grpc.Dial(":9991", grpc.WithInsecure())
+	// if err != nil {
+	// 	t.Error(err)
+	// 	return
+	// }
+	// client := pb.NewCardListClient(conn)
+	server := &services.Server{}
+	vcard := &pb.VCard{
+		CardNo:  "6274860010001736",
+		AccFlag: "61003010013579",
+	}
+
+	// cardList, err := client.GetCardDetails(ctx, vcard)
+	cardList, err := server.GetCardDetails(ctx, vcard)
+
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if len(cardList.GetVcard()) <= 0 {
+		t.Error("no data found")
+		return
+	}
+
+	utils.LogToFile(fmt.Sprintf("TestGetCardDetails result : %v", cardList.GetVcard()))
+	for _, v := range cardList.GetVcard() {
+		if v.CardNo == vcard.CardNo {
+			return
+		}
+	}
+
+	t.Error("result not match with test")
 }

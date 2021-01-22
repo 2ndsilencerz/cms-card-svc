@@ -36,6 +36,7 @@ func setCardList(cards []models.VCard) *pb.VCardList {
 			CardBranch: v.CardBranch,
 			Status:     v.Status,
 			InstantNon: v.InstantNon,
+			AccFlag:    v.AccFlag,
 		}
 		result.Vcard = append(result.Vcard, &card)
 	}
@@ -86,7 +87,7 @@ func (s *Server) GetCardBlockedList(ctx context.Context, in *pb.BlockPage) (*pb.
 	filterType := in.Page.FilterType
 	filterValue := in.Page.FilterValue
 
-	repo := repository.VCardRepository{
+	repo := &repository.VCardRepository{
 		Ctx:         ctx,
 		FilterType:  filterType,
 		FilterValue: filterValue,
@@ -100,6 +101,43 @@ func (s *Server) GetCardBlockedList(ctx context.Context, in *pb.BlockPage) (*pb.
 	}
 
 	result := setCardList(repo.VcardList)
+	utils.LogToFile(fmt.Sprintf("Response: %T", result))
+	return result, nil
+}
+
+// GetCardDetails used in /card/detail/{cardNo}
+func (s *Server) GetCardDetails(ctx context.Context, in *pb.VCard) (*pb.VCardList, error) {
+	utils.LogToFile(fmt.Sprintf("Request: %T", in))
+
+	repo := &repository.VCardRepository{
+		Ctx: ctx,
+	}
+
+	vcards, err := repo.GetDetails(models.VCard{
+		CardNo:  in.CardNo,
+		AccFlag: in.AccFlag,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	result := new(pb.VCardList)
+	for _, v := range vcards {
+		card := pb.VCard{
+			CardNo:       v.VCard.CardNo,
+			CardType:     v.VCard.CardType,
+			NameOnCard:   v.VCard.NameOnCard,
+			CifName:      v.VCard.CifName,
+			Cif:          v.VCard.Cif,
+			CardBranch:   v.VCard.CardBranch,
+			Status:       v.VCard.Status,
+			InstantNon:   v.VCard.InstantNon,
+			BranchName:   v.Branch.BranchName,
+			CardTypeDesc: v.VCardType.Description,
+			AccFlag:      v.VCard.AccFlag,
+		}
+		result.Vcard = append(result.Vcard, &card)
+	}
 	utils.LogToFile(fmt.Sprintf("Response: %T", result))
 	return result, nil
 }

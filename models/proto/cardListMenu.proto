@@ -7,6 +7,7 @@ option go_package = ".;pb";
 service CardList {
     rpc GetCardList(Page) returns (VCardList) {}
     rpc GetCardBlockedList(BlockPage) returns (VCardList) {}
+    rpc GetCardDetails(VCard) returns (VCardList) {}
 }
 
 // Request
@@ -23,11 +24,6 @@ message BlockPage {
     string ocBranch = 3;
 }
 
-// Response
-message VCardList {
-    repeated VCard vcard = 1;
-}
-
 message VCard {
     string cardNo = 1;
     string cardType = 2;
@@ -37,4 +33,12 @@ message VCard {
     string cardBranch = 6;
     string status = 7;
     string instantNon = 8;
+    string branchName = 9;
+    string cardTypeDesc = 10;
+    string accFlag = 11;
+}
+
+// Response
+message VCardList {
+    repeated VCard vcard = 1;
 }
