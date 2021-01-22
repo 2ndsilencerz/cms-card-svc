@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/2ndsilencerz/cms-card-svc/configs/utils"
@@ -111,10 +112,9 @@ func TestSQLInject(t *testing.T) {
 
 	_, err = client.GetCardList(ctx, page)
 	// _, err := server.GetCardList(ctx, page)
-	if err != nil {
-		if err.Error() == repository.CardNoFailedToParseMessage {
-			return
-		}
+	utils.LogToFile(fmt.Sprint(err))
+	if err != nil && strings.Contains(err.Error(), repository.CardNoFailedToParseMessage) {
+		return
 	} else {
 		t.Error("this test has failed")
 	}
