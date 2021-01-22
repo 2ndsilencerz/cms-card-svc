@@ -103,14 +103,14 @@ func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) er
 	db = db.WithContext(p.Ctx).Limit(p.Limit).Offset(p.Offsets)
 
 	condition = "CRSTS = ?"
-	var cardAction string
+	var cardStatus string
 	// set filter status
 	if cardFlag.action == CardActionActivate {
-		cardAction = utils.IntToStr(cardStatusBlock)
+		cardStatus = utils.IntToStr(cardStatusBlock)
 	} else if cardFlag.action == CardActionBlock || cardFlag.action == CardActionChange {
-		cardAction = utils.IntToStr(cardStatusActive)
+		cardStatus = utils.IntToStr(cardStatusActive)
 	} else if cardFlag.action == CardActionClose {
-		cardAction = utils.IntToStr(cardStatusClose)
+		cardStatus = utils.IntToStr(cardStatusClose)
 	}
 
 	// set filter cardNo or accFlag
@@ -126,7 +126,7 @@ func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) er
 	} else {
 		condition += " AND CRBRCR NOT LIKE ?"
 	}
-	db = db.Where(condition, cardAction, p.FilterValue, branch[:1]+"%")
+	db = db.Where(condition, cardStatus, p.FilterValue, branch[:1]+"%")
 	err = db.Find(&p.VcardList).Error
 	return err
 }
