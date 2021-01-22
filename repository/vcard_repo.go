@@ -86,6 +86,11 @@ func (p *VCardRepository) GetCardList() error {
 // GetVCardToMaintenance ...
 func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) error {
 
+	res := utils.StrToInt(p.FilterValue)
+	if res == 0 {
+		return utils.NewError(CardNoFailedToParseMessage)
+	}
+
 	cardFlag := &constCardFlag{}
 	cardFlag.set(action)
 
@@ -97,23 +102,22 @@ func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) er
 	var err error
 	db = db.WithContext(p.Ctx).Limit(p.Limit).Offset(p.Offsets)
 
+	condition = "CRSTS = ?"
+	var cardAction string
 	// set filter status
 	if cardFlag.action == CardActionActivate {
-		condition = "CRSTS = '" + utils.IntToStr(cardStatusBlock) + "'"
+		cardAction = utils.IntToStr(cardStatusBlock)
 	} else if cardFlag.action == CardActionBlock || cardFlag.action == CardActionChange {
-		condition = "CRSTS = '" + utils.IntToStr(cardStatusActive) + "'"
+		cardAction = utils.IntToStr(cardStatusActive)
 	} else if cardFlag.action == CardActionClose {
-		condition = "CRSTS = '" + utils.IntToStr(cardStatusClose) + "'"
+		cardAction = utils.IntToStr(cardStatusClose)
 	}
 
-	res := utils.StrToInt(p.FilterValue)
 	// set filter cardNo or accFlag
-	if p.FilterType == filterTypeCardNo && res != 0 {
-		condition += " AND CRDNO = '" + p.FilterValue + "'"
-	} else if p.FilterType == filterTypeAccFlag && res != 0 {
-		condition += " AND ACCFLAG = '" + p.FilterValue + "'"
-	} else {
-		return utils.NewError(CardNoFailedToParseMessage)
+	if p.FilterType == filterTypeCardNo {
+		condition += " AND CRDNO = ?"
+	} else if p.FilterType == filterTypeAccFlag {
+		condition += " AND ACCFLAG = ?"
 	}
 
 	// set if
@@ -122,7 +126,7 @@ func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) er
 	} else {
 		condition += " AND CRBRCR NOT LIKE ?"
 	}
-	db = db.Where(condition, branch[:1]+"%")
+	db = db.Where(condition, cardAction, p.FilterValue, branch[:1]+"%")
 	err = db.Find(&p.VcardList).Error
 	return err
 }

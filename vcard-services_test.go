@@ -10,7 +10,6 @@ import (
 	"github.com/2ndsilencerz/cms-card-svc/models/pb"
 	"github.com/2ndsilencerz/cms-card-svc/repository"
 	"github.com/2ndsilencerz/cms-card-svc/services"
-	"google.golang.org/grpc"
 )
 
 var ctx context.Context = context.Background()
@@ -95,13 +94,13 @@ func TestGetBlockedCard(t *testing.T) {
 
 func TestSQLInject(t *testing.T) {
 
-	conn, err := grpc.Dial(":9991", grpc.WithInsecure())
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	client := pb.NewCardListClient(conn)
-	// server := &services.Server{}
+	// conn, err := grpc.Dial(":9991", grpc.WithInsecure())
+	// if err != nil {
+	// 	t.Error(err)
+	// 	return
+	// }
+	// client := pb.NewCardListClient(conn)
+	server := &services.Server{}
 
 	page := &pb.Page{
 		FilterType:  "accFlag",
@@ -110,8 +109,8 @@ func TestSQLInject(t *testing.T) {
 		Limit:       "10",
 	}
 
-	_, err = client.GetCardList(ctx, page)
-	// _, err := server.GetCardList(ctx, page)
+	// _, err = client.GetCardList(ctx, page)
+	_, err := server.GetCardList(ctx, page)
 	utils.LogToFile(fmt.Sprint(err))
 	if err != nil && strings.Contains(err.Error(), repository.CardNoFailedToParseMessage) {
 		return
