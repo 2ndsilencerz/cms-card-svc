@@ -8,4 +8,5 @@ import (
 // InitAllServices to init all endpoint of grpc
 func InitAllServices(grpcServer *grpc.Server) {
 	pb.RegisterCardListServer(grpcServer, &Server{})
+	pb.RegisterCardTypeListServer(grpcServer, &Server{})
 }

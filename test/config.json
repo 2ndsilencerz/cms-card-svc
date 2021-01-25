@@ -1,0 +1,4 @@
+{
+  "port" : "9991",
+  "mysql" : "dev:dev@tcp(127.0.0.1:3306)/ist77?charset=utf8&parseTime=True&loc=Local"
+}

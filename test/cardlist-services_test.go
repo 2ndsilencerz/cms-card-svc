@@ -1,4 +1,4 @@
-package main
+package test
 
 import (
 	"context"
@@ -114,9 +114,9 @@ func TestSQLInject(t *testing.T) {
 	utils.LogToFile(fmt.Sprint(err))
 	if err != nil && strings.Contains(err.Error(), repository.CardNoFailedToParseMessage) {
 		return
-	} else {
-		t.Error("this test has failed")
 	}
+
+	t.Error("this test has failed")
 }
 
 func TestGetCardDetails(t *testing.T) {

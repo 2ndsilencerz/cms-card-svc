@@ -1,0 +1,47 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = ".;pb";
+
+package pb;
+
+service CardTypeList {
+    rpc GetInstantCardType(google.protobuf.Empty) returns (VCardTypeList) {}
+    rpc GetDataForEmboss(EmbossRequest) returns (InstantStockList) {}
+}
+
+message VCardType {
+    string typeCode = 1;
+    string description = 2;
+    string mainType = 3;
+}
+
+message VCardTypeList {
+    repeated VCardType VCardType = 1;
+}
+
+message EmbossRequest {
+    string type = 1;
+    google.protobuf.Timestamp startDate = 2;
+    google.protobuf.Timestamp endDate = 3;    
+}
+
+message InstantStock {
+    string id = 1;
+	google.protobuf.Timestamp embossDate = 2;
+	string endNumber = 3;
+	google.protobuf.Timestamp generateDate = 4;
+	int32 print = 5;
+	int32 serviceCode = 6;
+	string startNumber = 7;
+	string status = 8;
+	int32 total = 9;
+	string type = 10;
+	string userEmboss = 11;
+	string userGenerate = 12;
+}
+
+message InstantStockList {
+    repeated InstantStock InstantStock = 1;
+}

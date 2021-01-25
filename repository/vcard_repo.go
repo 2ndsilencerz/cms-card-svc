@@ -51,7 +51,7 @@ func (c *constCardFlag) set(action string) {
 	c.action = action
 }
 
-// VCardRepository used to
+// VCardRepository ...
 type VCardRepository struct {
 	Ctx         context.Context
 	FilterType  string
