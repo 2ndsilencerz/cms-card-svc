@@ -30,8 +30,10 @@ const filterTypeCardNo = "cardNo"
 const filterTypeAccFlag = "accFlag"
 const syariahBranchPre = "6"
 
-// CardNoFailedToParseMessage ...
+// CardNoFailedToParseMessage to show error of non-parse-able data
 const CardNoFailedToParseMessage = "parameter cannot be parsed or isn't defined"
+
+// CardNoFailedToFindInfo to show error of non existence with inputted data
 const CardNoFailedToFindInfo = "failed to find info with this cardNo"
 
 type constCardFlag struct {
@@ -131,6 +133,7 @@ func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) er
 	return err
 }
 
+// CardDetails for data that need to be joined with other table such as VCardType and Branch
 type CardDetails struct {
 	models.VCard
 	models.VCardType
@@ -138,7 +141,7 @@ type CardDetails struct {
 }
 
 // GetDetails of card inputted
-func (v *VCardRepository) GetDetails(card models.VCard) ([]CardDetails, error) {
+func (p *VCardRepository) GetDetails(card models.VCard) ([]CardDetails, error) {
 
 	db := database.InitDB()
 	defer database.CloseDB(db)
@@ -153,7 +156,7 @@ func (v *VCardRepository) GetDetails(card models.VCard) ([]CardDetails, error) {
 	condition := "v_cards.ACCFLAG IS NOT NULL"
 	condition += " AND v_cards.ACCFLAG != '-'"
 	condition += " AND v_cards.ACCFLAG = ?"
-	db = db.WithContext(v.Ctx).Model(&models.VCard{}).Select("*")
+	db = db.WithContext(p.Ctx).Model(&models.VCard{}).Select("*")
 	db = db.Joins("left join branches on v_cards.CRBRCR = branches.BRCCODE")
 	db = db.Joins("left join v_card_types on v_cards.CRTYPE = v_card_types.CTTYPE")
 	db = db.Where(condition, card.AccFlag)

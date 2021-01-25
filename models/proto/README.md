@@ -17,7 +17,13 @@ To generate go file from this proto execute command like this
 
 To automatically generate all .proto file within working directory, replace 
 
-    grpc:chat to grpc:.
+    "grpc:chat" to "grpc:."
 and 
 
-    chat.proto to * or *.proto
+    "chat.proto" to "*" or "*.proto"
+
+incase of building with google.protobuf type like Timestamp, use include parameter to the command so it would be like this
+
+    protoc -I=. -I="D:\GOPATH\protobuf\src" --go_out=plugins=grpc:. *.proto    
+
+the protobuf\src is the location of src folder of protobuf repository (download it via https://github.com/protocolbuffers/protobuf) 

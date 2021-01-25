@@ -1,8 +1,10 @@
 syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+option go_package = ".;pb";
 
 // package should be matched to the directory which .pb.go file will be placed
 package pb;
-option go_package = ".;pb";
 
 service CardList {
     rpc GetCardList(Page) returns (VCardList) {}
@@ -36,6 +38,16 @@ message VCard {
     string branchName = 9;
     string cardTypeDesc = 10;
     string accFlag = 11;
+    google.protobuf.Timestamp birthDate = 12;
+    string birthPlace = 13;
+    string motherName = 14;
+    string phoneNum = 15;
+    string address = 16;
+    google.protobuf.Timestamp createDate = 17;
+    google.protobuf.Timestamp lastUpdate = 18;
+    google.protobuf.Timestamp expireOnCMS = 19;
+    google.protobuf.Timestamp expireOnCard = 20;
+    google.protobuf.Timestamp expirePin = 21;
 }
 
 // Response
