@@ -53,8 +53,9 @@ func (s *Server) GetInstantCardType(ctx context.Context, empty *emptypb.Empty) (
 	utils.LogToFile(fmt.Sprint("Request: GetInstantCardType"))
 
 	repo := &repository.VCardTypeRepository{
-		Ctx: ctx,
-	}
+		Setting: repository.Setting{
+			Ctx: ctx,
+		}}
 	err := repo.GetInstantCardType()
 	if err != nil {
 		return nil, err

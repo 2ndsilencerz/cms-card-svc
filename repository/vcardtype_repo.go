@@ -3,12 +3,11 @@ package repository
 import (
 	"github.com/2ndsilencerz/cms-card-svc/configs/database"
 	"github.com/2ndsilencerz/cms-card-svc/models"
-	"golang.org/x/net/context"
 )
 
 // VCardTypeRepository ...
 type VCardTypeRepository struct {
-	Ctx          context.Context
+	Setting
 	CardTypeList []models.VCardType
 }
 
