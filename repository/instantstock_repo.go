@@ -30,8 +30,7 @@ func (p *InstantStockRepository) GetDataForEmboss() error {
 	defer database.CloseDB(db)
 
 	var condition string = "STATUS = ?"
-	db = db.WithContext(p.Ctx)
-	db = db.Limit(p.LimitInt).Offset(offset)
+	db = db.WithContext(p.Ctx).Model(&p.InstantStockList)
 	if len(p.Type) > 0 {
 		condition += " AND TYPE = ?"
 	}
@@ -48,6 +47,8 @@ func (p *InstantStockRepository) GetDataForEmboss() error {
 	}
 
 	db = db.Where(condition, "G", p.Type, p.StartDate, p.EndDate)
+	db.Count(&p.Total)
+	db = db.Limit(p.LimitInt).Offset(offset)
 	err = db.Find(&p.InstantStockList).Error
 	utils.PrintToConsole(fmt.Sprint(p.InstantStockList))
 	return err

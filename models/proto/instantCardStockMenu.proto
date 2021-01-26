@@ -47,4 +47,5 @@ message InstantStock {
 
 message InstantStockList {
     repeated InstantStock InstantStock = 1;
+    int32 totalPage = 2;
 }

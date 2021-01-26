@@ -53,4 +53,5 @@ message VCard {
 // Response
 message VCardList {
     repeated VCard vcard = 1;
+    int32 totalPage = 2;
 }

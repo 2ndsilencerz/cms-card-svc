@@ -14,6 +14,7 @@ type Setting struct {
 	Page        string
 	LimitInt    int
 	PageInt     int
+	Total       int64
 }
 
 // Offsets calculated by Page and Limit
@@ -28,4 +29,9 @@ func (s *Setting) Offsets() (int, error) {
 		offsets = 0
 	}
 	return offsets, nil
+}
+
+// TotalPage for paging
+func (s *Setting) TotalPage() int32 {
+	return int32(s.Total / 10)
 }

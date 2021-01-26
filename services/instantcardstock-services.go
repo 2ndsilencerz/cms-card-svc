@@ -84,6 +84,7 @@ func (s *Server) GetDataForEmboss(ctx context.Context, in *pb.EmbossRequest) (*p
 		return nil, err
 	}
 	result := setInstantCardStockList(repo.InstantStockList)
+	result.TotalPage = repo.TotalPage()
 	utils.LogToFile(fmt.Sprintf("Response: %T", result))
 	return result, nil
 }

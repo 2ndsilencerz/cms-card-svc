@@ -90,6 +90,7 @@ func (s *Server) GetCardList(ctx context.Context, in *pb.Page) (*pb.VCardList, e
 	}
 
 	result := setCardList(repo.VcardList)
+	result.TotalPage = repo.TotalPage()
 
 	utils.LogToFile(fmt.Sprintf("Response: %T", result))
 	return result, nil
@@ -114,6 +115,7 @@ func (s *Server) GetCardBlockedList(ctx context.Context, in *pb.BlockPage) (*pb.
 	}
 
 	result := setCardList(repo.VcardList)
+	result.TotalPage = repo.TotalPage()
 	utils.LogToFile(fmt.Sprintf("Response: %T", result))
 	return result, nil
 }

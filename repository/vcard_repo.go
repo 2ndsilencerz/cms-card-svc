@@ -70,7 +70,7 @@ func (p *VCardRepository) GetCardList() error {
 	db := database.InitDB()
 	defer database.CloseDB(db)
 
-	db = db.WithContext(p.Ctx).Limit(p.LimitInt).Offset(offsets)
+	db = db.WithContext(p.Ctx).Model(&p.VcardList)
 	if p.FilterType == filterTypeCardNo {
 		db = db.Where("CRDNO = ?", p.FilterValue)
 	} else if p.FilterType == filterTypeAccFlag {
@@ -78,6 +78,8 @@ func (p *VCardRepository) GetCardList() error {
 	} else {
 
 	}
+	db.Count(&p.Total)
+	db = db.Limit(p.LimitInt).Offset(offsets)
 	err = db.Find(&p.VcardList).Error
 
 	return err
@@ -99,7 +101,7 @@ func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) er
 	db := database.InitDB()
 	defer database.CloseDB(db)
 
-	db = db.WithContext(p.Ctx).Limit(p.LimitInt).Offset(offset)
+	db = db.WithContext(p.Ctx).Model(&p.VcardList)
 
 	condition = "CRSTS = ?"
 	var cardStatus string
@@ -126,6 +128,8 @@ func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) er
 		condition += " AND CRBRCR NOT LIKE ?"
 	}
 	db = db.Where(condition, cardStatus, p.FilterValue, branch[:1]+"%")
+	db.Count(&p.Total)
+	db = db.Limit(p.LimitInt).Offset(offset)
 	err = db.Find(&p.VcardList).Error
 	return err
 }
