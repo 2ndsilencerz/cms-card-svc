@@ -69,7 +69,11 @@ func (s *Server) GetDataForEmboss(ctx context.Context, in *pb.EmbossRequest) (*p
 	utils.LogToFile(fmt.Sprintf("Request: %v", in))
 
 	repo := &repository.InstantStockRepository{
-		Ctx:       ctx,
+		Setting: repository.Setting{
+			Ctx:   ctx,
+			Limit: in.Page.Limit,
+			Page:  in.Page.Page,
+		},
 		StartDate: in.StartDate.AsTime(),
 		EndDate:   in.EndDate.AsTime(),
 		Type:      in.Type,

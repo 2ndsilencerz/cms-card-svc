@@ -16,11 +16,7 @@ var ctx context.Context = context.Background()
 
 func TestGetCardList(t *testing.T) {
 
-	// conn, err := grpc.Dial(":9991", grpc.WithInsecure())
-	// if err != nil {
-	// 	t.Error(err)
-	// 	return
-	// }
+	// conn := ConnectionConfig()
 	// client := pb.NewCardListClient(conn)
 	server := &services.Server{}
 
@@ -52,11 +48,7 @@ func TestGetCardList(t *testing.T) {
 
 func TestGetBlockedCard(t *testing.T) {
 
-	// conn, err := grpc.Dial(":9991", grpc.WithInsecure())
-	// if err != nil {
-	// 	t.Error(err)
-	// 	return
-	// }
+	// conn := ConnectionConfig()
 	// client := pb.NewCardListClient(conn)
 	server := &services.Server{}
 
@@ -94,11 +86,7 @@ func TestGetBlockedCard(t *testing.T) {
 
 func TestSQLInject(t *testing.T) {
 
-	// conn, err := grpc.Dial(":9991", grpc.WithInsecure())
-	// if err != nil {
-	// 	t.Error(err)
-	// 	return
-	// }
+	// conn := ConnectionConfig()
 	// client := pb.NewCardListClient(conn)
 	server := &services.Server{}
 
@@ -121,11 +109,7 @@ func TestSQLInject(t *testing.T) {
 
 func TestGetCardDetails(t *testing.T) {
 
-	// conn, err := grpc.Dial(":9991", grpc.WithInsecure())
-	// if err != nil {
-	// 	t.Error(err)
-	// 	return
-	// }
+	// conn := ConnectionConfig()
 	// client := pb.NewCardListClient(conn)
 	server := &services.Server{}
 	vcard := &pb.VCard{

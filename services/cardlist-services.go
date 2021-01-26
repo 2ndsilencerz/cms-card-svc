@@ -12,19 +12,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func setOffset(limitStr, pageStr string) (int, error) {
-	limit := utils.StrToInt(limitStr)
-	page := utils.StrToInt(pageStr)
-	if limit == 0 && page == 0 {
-		return 0, utils.NewError("Failed to parse limit and page number")
-	}
-	offsets := (page-1)*limit - 1
-	if offsets == -1 {
-		offsets = 0
-	}
-	return offsets, nil
-}
-
 func setCardList(cards []models.VCard) *pb.VCardList {
 	result := new(pb.VCardList)
 	for _, v := range cards {
@@ -89,23 +76,15 @@ func setCardListOfCardDetails(vcards []repository.CardDetails) *pb.VCardList {
 func (s *Server) GetCardList(ctx context.Context, in *pb.Page) (*pb.VCardList, error) {
 	utils.LogToFile(fmt.Sprintf("Request: %T", in))
 
-	limit := utils.StrToInt(in.Limit)
-	offsets, err := setOffset(in.Limit, in.Page)
-	if err != nil {
-		return nil, err
-	}
-
-	filterType := in.FilterType
-	filterValue := in.FilterValue
-
 	repo := &repository.VCardRepository{
-		Ctx:         ctx,
-		FilterType:  filterType,
-		FilterValue: filterValue,
-		Limit:       limit,
-		Offsets:     offsets,
-	}
-	err = repo.GetCardList()
+		Setting: repository.Setting{
+			Ctx:         ctx,
+			FilterType:  in.FilterType,
+			FilterValue: in.FilterValue,
+			Limit:       in.Limit,
+			Page:        in.Page,
+		}}
+	err := repo.GetCardList()
 	if err != nil {
 		return nil, err
 	}
@@ -120,24 +99,16 @@ func (s *Server) GetCardList(ctx context.Context, in *pb.Page) (*pb.VCardList, e
 func (s *Server) GetCardBlockedList(ctx context.Context, in *pb.BlockPage) (*pb.VCardList, error) {
 	utils.LogToFile(fmt.Sprintf("Request: %T", in))
 
-	limit := utils.StrToInt(in.Page.Limit)
-	offsets, err := setOffset(in.Page.Limit, in.Page.Page)
-	if err != nil {
-		return nil, err
-	}
-
-	filterType := in.Page.FilterType
-	filterValue := in.Page.FilterValue
-
 	repo := &repository.VCardRepository{
-		Ctx:         ctx,
-		FilterType:  filterType,
-		FilterValue: filterValue,
-		Limit:       limit,
-		Offsets:     offsets,
-	}
+		Setting: repository.Setting{
+			Ctx:         ctx,
+			FilterType:  in.Page.FilterType,
+			FilterValue: in.Page.FilterValue,
+			Limit:       in.Page.Limit,
+			Page:        in.Page.Page,
+		}}
 
-	err = repo.GetVCardToMaintenance(repository.CardActionBlock, in.Branch)
+	err := repo.GetVCardToMaintenance(repository.CardActionBlock, in.Branch)
 	if err != nil {
 		return nil, err
 	}
@@ -152,8 +123,9 @@ func (s *Server) GetCardDetails(ctx context.Context, in *pb.VCard) (*pb.VCardLis
 	utils.LogToFile(fmt.Sprintf("Request: %T", in))
 
 	repo := &repository.VCardRepository{
-		Ctx: ctx,
-	}
+		Setting: repository.Setting{
+			Ctx: ctx,
+		}}
 
 	vcards, err := repo.GetDetails(models.VCard{
 		CardNo:  in.CardNo,

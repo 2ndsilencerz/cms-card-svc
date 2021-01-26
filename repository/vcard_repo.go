@@ -4,7 +4,6 @@ import (
 	"github.com/2ndsilencerz/cms-card-svc/configs/database"
 	"github.com/2ndsilencerz/cms-card-svc/configs/utils"
 	"github.com/2ndsilencerz/cms-card-svc/models"
-	"golang.org/x/net/context"
 )
 
 const cardFlagAll = 1
@@ -53,12 +52,8 @@ func (c *constCardFlag) set(action string) {
 
 // VCardRepository ...
 type VCardRepository struct {
-	Ctx         context.Context
-	FilterType  string
-	FilterValue string
-	Limit       int
-	Offsets     int
-	VcardList   []models.VCard
+	Setting
+	VcardList []models.VCard
 }
 
 // Note: Query using Gorm should place Find() at the last place
@@ -67,18 +62,21 @@ type VCardRepository struct {
 // GetCardList ...
 func (p *VCardRepository) GetCardList() error {
 
+	offsets, err := p.Offsets()
+	if err != nil || utils.StrToInt(p.FilterValue) == 0 {
+		return utils.NewError(CardNoFailedToParseMessage)
+	}
+
 	db := database.InitDB()
 	defer database.CloseDB(db)
-	var err error
 
-	res := utils.StrToInt(p.FilterValue)
-	db = db.WithContext(p.Ctx).Limit(p.Limit).Offset(p.Offsets)
-	if p.FilterType == filterTypeCardNo && res != 0 {
+	db = db.WithContext(p.Ctx).Limit(p.LimitInt).Offset(offsets)
+	if p.FilterType == filterTypeCardNo {
 		db = db.Where("CRDNO = ?", p.FilterValue)
-	} else if p.FilterType == filterTypeAccFlag && res != 0 {
+	} else if p.FilterType == filterTypeAccFlag {
 		db = db.Where("CRACIF = ?", p.FilterValue)
 	} else {
-		return utils.NewError(CardNoFailedToParseMessage)
+
 	}
 	err = db.Find(&p.VcardList).Error
 
@@ -88,8 +86,8 @@ func (p *VCardRepository) GetCardList() error {
 // GetVCardToMaintenance ...
 func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) error {
 
-	res := utils.StrToInt(p.FilterValue)
-	if res == 0 {
+	offset, err := p.Offsets()
+	if err != nil || utils.StrToInt(p.FilterValue) == 0 {
 		return utils.NewError(CardNoFailedToParseMessage)
 	}
 
@@ -101,8 +99,7 @@ func (p *VCardRepository) GetVCardToMaintenance(action string, branch string) er
 	db := database.InitDB()
 	defer database.CloseDB(db)
 
-	var err error
-	db = db.WithContext(p.Ctx).Limit(p.Limit).Offset(p.Offsets)
+	db = db.WithContext(p.Ctx).Limit(p.LimitInt).Offset(offset)
 
 	condition = "CRSTS = ?"
 	var cardStatus string

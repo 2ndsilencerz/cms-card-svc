@@ -8,13 +8,11 @@ import (
 
 	"github.com/2ndsilencerz/cms-card-svc/configs/database"
 	"github.com/2ndsilencerz/cms-card-svc/configs/utils"
-
-	"golang.org/x/net/context"
 )
 
 // InstantStockRepository ...
 type InstantStockRepository struct {
-	Ctx              context.Context
+	Setting
 	Type             string
 	StartDate        time.Time
 	EndDate          time.Time
@@ -24,21 +22,23 @@ type InstantStockRepository struct {
 // GetDataForEmboss ...
 func (p *InstantStockRepository) GetDataForEmboss() error {
 
+	offset, err := p.Offsets()
+	if err != nil || (len(p.Type) > 0 && utils.StrToInt(p.Type) == 0) {
+		return utils.NewError(CardNoFailedToParseMessage)
+	}
 	db := database.InitDB()
 	defer database.CloseDB(db)
-	var err error
 
 	var condition string = "STATUS = ?"
 	db = db.WithContext(p.Ctx)
-	if len(p.Type) > 0 && utils.StrToInt(p.Type) != 0 {
+	db = db.Limit(p.LimitInt).Offset(offset)
+	if len(p.Type) > 0 {
 		condition += " AND TYPE = ?"
-	} else if len(p.Type) > 0 && utils.StrToInt(p.Type) == 0 {
-		return utils.NewError(CardNoFailedToParseMessage)
 	}
 
 	// somehow the IsZero() return false if we don't set the value
 	// which is technically wrong
-	// (maybe because the code tested in windows the result was 1970-01-01 00:00:00 +0000 UTC).
+	// (maybe because the code tested in windows, the result was 1970-01-01 00:00:00 +0000 UTC).
 	// we will use Nanosecond() instead to compare
 	if p.StartDate.Nanosecond() != 0 {
 		condition += " AND GENERATE_DATE >= ?"

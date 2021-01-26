@@ -13,11 +13,7 @@ import (
 
 func TestGetInstantCardType(t *testing.T) {
 
-	// conn, err := grpc.Dial(":9991", grpc.WithInsecure())
-	// if err != nil {
-	// 	t.Error(err)
-	// 	return
-	// }
+	// conn := ConnectionConfig()
 	// client := pb.NewCardListClient(conn)
 	server := &services.Server{}
 	empty := new(emptypb.Empty)
@@ -38,7 +34,11 @@ func TestGetInstantCardType(t *testing.T) {
 func TestGetDataForEmboss(t *testing.T) {
 
 	server := &services.Server{}
-	param := &pb.EmbossRequest{}
+	param := &pb.EmbossRequest{
+		Page: &pb.Page{
+			Page:  "1",
+			Limit: "10",
+		}}
 	instantStockList, err := server.GetDataForEmboss(ctx, param)
 	if err != nil {
 		t.Error(err)
