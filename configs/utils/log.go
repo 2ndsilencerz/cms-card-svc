@@ -20,7 +20,7 @@ func loadFile() *os.File {
 	return file
 }
 
-// LogToFile used to log into file which located in logs/log
+// LogToFile used to log into file which located in logs/log while also print it into console
 func LogToFile(content string) {
 	file := loadFile()
 	//writer := io.MultiWriter(os.Stdout, file)

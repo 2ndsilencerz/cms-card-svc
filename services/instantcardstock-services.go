@@ -88,3 +88,40 @@ func (s *Server) GetDataForEmboss(ctx context.Context, in *pb.EmbossRequest) (*p
 	utils.LogToFile(fmt.Sprintf("Response: %T", result))
 	return result, nil
 }
+
+func (s *Server) GetInstantCardStockSum(ctx context.Context, empty *emptypb.Empty) (*pb.InstantCardStockSum, error) {
+	utils.LogToFile(fmt.Sprint("Request: GetInstantCardStockSum"))
+
+	repo := &repository.VCardTypeRepository{
+		Setting: repository.Setting{
+			Ctx: ctx,
+		},
+	}
+	err := repo.GetInstantCardType()
+	if err != nil {
+		return nil, err
+	}
+
+	vpcardRepo := repository.VPCardRepository{
+		Setting: repository.Setting{
+			Ctx: ctx,
+		},
+	}
+	result := new(pb.InstantCardStockSum)
+	vcardTypeList := repo.CardTypeList
+	for _, v := range vcardTypeList {
+		cardType := v.TypeCode
+		magneticCardSum, _ := vpcardRepo.CountByCardTypeAndStatusAndServiceCode(cardType, "201")
+		chipCardSum, _ := vpcardRepo.CountByCardTypeAndStatusAndServiceCode(cardType, "101")
+		vcardType := pb.VCardType{
+			TypeCode:        cardType,
+			MagneticCardSum: int32(magneticCardSum),
+			ChipCardSum:     int32(chipCardSum),
+			AllCardSum:      int32(magneticCardSum + chipCardSum),
+		}
+		result.VCardType = append(result.VCardType, &vcardType)
+	}
+
+	utils.LogToFile(fmt.Sprintf("Response: %T", result))
+	return result, nil
+}

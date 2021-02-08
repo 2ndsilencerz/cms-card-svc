@@ -52,3 +52,21 @@ func TestGetDataForEmboss(t *testing.T) {
 
 	utils.LogToFile(fmt.Sprintf("TestGetDataForEmboss result: %v", instantStockList.InstantStock))
 }
+
+func TestGetInstantCardStockSum(t *testing.T) {
+
+	server := &services.Server{}
+	empty := new(emptypb.Empty)
+	cardTypeList, err := server.GetInstantCardStockSum(ctx, empty)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	if len(cardTypeList.VCardType) <= 0 {
+		t.Error("no data found")
+		return
+	}
+
+	utils.LogToFile(fmt.Sprintf("TestGetInstantCardStockSum result: %v", cardTypeList))
+}

@@ -2,11 +2,17 @@ To generate this proto file as functional go program, make sure you have protoc 
 
 To get it execute this command
 
-    go get -u github.com/golang/protobuf/protoc-gen-go
+~~go get -u github.com/golang/protobuf/protoc-gen-go~~
+    
+    go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
 
 If somehow the command above still not work, try to install the package by executing
 
-    go install github.com/golang/protobuf/protoc-gen-go
+~~go install github.com/golang/protobuf/protoc-gen-go~~
+    
+    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
+
+(If its still not work, try with the protoc.exe in this directory)
 
 After that, include the binary path to the environment path (if the generated binary is protoc-gen-go, 
 we can rename this file to protoc for simpler name)
